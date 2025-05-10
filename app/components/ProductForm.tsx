@@ -107,7 +107,7 @@ export function ProductForm({
       {/* Shipping Note */}
       <div className="bg-blue-50 border border-blue-100 rounded p-4 flex items-center">
         <div className="text-blue-600 font-medium">
-          Free shipping on all orders over $90
+          Free shipping on all orders over $80
         </div>
       </div>
 

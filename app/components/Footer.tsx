@@ -4,11 +4,9 @@ import { JSX } from "react/jsx-runtime";
 const navigation = {
   main: [
     { name: "About", href: "#" },
-    { name: "Blog", href: "#" },
-    { name: "Jobs", href: "#" },
-    { name: "Press", href: "#" },
-    { name: "Accessibility", href: "#" },
+    { name: "Contact", href: "#" },
     { name: "Partners", href: "#" },
+    { name: "Press", href: "#" },
   ],
   social: [
     {
@@ -101,7 +99,10 @@ export default function Footer() {
               className="text-gray-400 hover:text-gray-300"
             >
               <span className="sr-only">{item.name}</span>
-              <item.icon aria-hidden="true" className="size-6 text-neutral-600 hover:text-white" />
+              <item.icon
+                aria-hidden="true"
+                className="size-6 text-neutral-600 hover:text-white"
+              />
             </a>
           ))}
         </div>
