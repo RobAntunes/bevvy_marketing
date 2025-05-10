@@ -845,7 +845,7 @@ export type ProductsQueryVariables = StorefrontAPI.Exact<{
 export type ProductsQuery = {
   products: {
     nodes: Array<
-      Pick<StorefrontAPI.Product, 'handle' | 'description'> & {
+      Pick<StorefrontAPI.Product, 'id' | 'title' | 'handle' | 'description'> & {
         featuredImage?: StorefrontAPI.Maybe<
           Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>
         >;
@@ -862,6 +862,7 @@ export type ProductsQuery = {
         images: {
           nodes: Array<Pick<StorefrontAPI.Image, 'url' | 'width' | 'height'>>;
         };
+        metafield?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
       }
     >;
     pageInfo: Pick<
@@ -1141,7 +1142,7 @@ interface GeneratedQueryTypes {
     return: ProductQuery;
     variables: ProductQueryVariables;
   };
-  '#graphql\n  fragment MoneyCollectionItem on MoneyV2 {\n    amount\n    currencyCode\n  }\n  query Products {\n    products(first:1) {\n      nodes {\n        featuredImage {\n          url\n          altText\n          width\n          height\n        }\n        priceRange {\n          minVariantPrice {\n            ...MoneyCollectionItem\n          }\n          maxVariantPrice {\n            ...MoneyCollectionItem\n          }\n        }\n        handle\n        description\n        images(first:4) {\n          nodes {\n            url\n            width\n            height\n          }\n        }\n      }\n    pageInfo {\n      hasPreviousPage\n      hasNextPage\n      endCursor\n      startCursor\n    }\n  }\n}\n': {
+  '#graphql\n  fragment MoneyCollectionItem on MoneyV2 {\n    amount\n    currencyCode\n  }\n  query Products {\n    products(first:1) {\n      nodes {\n        id\n        title\n        featuredImage {\n          url\n          altText\n          width\n          height\n        }\n        priceRange {\n          minVariantPrice {\n            ...MoneyCollectionItem\n          }\n          maxVariantPrice {\n            ...MoneyCollectionItem\n          }\n        }\n        handle\n        description\n        images(first:4) {\n          nodes {\n            url\n            width\n            height\n          }\n        }\n        metafield(namespace: "custom", key: "info") {\n          value\n        }\n      }\n      pageInfo {\n        hasPreviousPage\n        hasNextPage\n        endCursor\n        startCursor\n      }\n    }\n  }\n': {
     return: ProductsQuery;
     variables: ProductsQueryVariables;
   };
