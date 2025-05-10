@@ -51,6 +51,8 @@ aside header {
   height: var(--header-height);
   justify-content: space-between;
   padding: 0 20px;
+  position: fixed;
+  top: 0;
 }
 
 aside header h3 {
@@ -163,14 +165,21 @@ button.reset:hover:not(:has(> *)) {
 * --------------------------------------------------
 */
 .header {
+  width: 100%;
   align-items: center;
-  background: #fff;
+  background: transparent;
   display: flex;
+  justify-content: space-between;
   height: var(--header-height);
   padding: 0 1rem;
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 1;
+  z-index: 999;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.header.scrolled {
+  background: #fff;
 }
 
 .header-menu-mobile-toggle {

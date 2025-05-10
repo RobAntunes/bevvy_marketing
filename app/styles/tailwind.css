@@ -4,3 +4,18 @@
  */
 
 @import 'tailwindcss';
+
+@font-face {
+    font-family: "bevvy";
+    src: url("../assets/fonts/Prostteo.woff2") format("woff2");
+  }
+
+@font-face {
+  font-family: "sewimple";
+  src: url("../assets/fonts/Sewimple.woff2") format("woff2");
+}
+
+@theme {
+  --font-bevvy: "bevvy";
+  --font-sewimple: "sewimple";
+}

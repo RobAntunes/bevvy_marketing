@@ -1,167 +1,119 @@
-import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Await, useLoaderData, Link, type MetaFunction} from '@remix-run/react';
-import {Suspense} from 'react';
-import {Image, Money} from '@shopify/hydrogen';
-import type {
-  FeaturedCollectionFragment,
-  RecommendedProductsQuery,
-} from 'storefrontapi.generated';
-import {ProductItem} from '~/components/ProductItem';
+import { Link, type MetaFunction } from "@remix-run/react";
+import hero from "~/assets/hero.jpg";
+import row from "~/assets/bevvy_row.png";
+import ProductOverview from "~/components/ProductOverview";
+import FAQ from "~/components/FAQ";
 
 export const meta: MetaFunction = () => {
-  return [{title: 'Hydrogen | Home'}];
+  return [{ title: "Bevvy | Home" }];
 };
 
-export async function loader(args: LoaderFunctionArgs) {
-  // Start fetching non-critical data without blocking time to first byte
-  const deferredData = loadDeferredData(args);
-
-  // Await the critical data required to render initial state of the page
-  const criticalData = await loadCriticalData(args);
-
-  return {...deferredData, ...criticalData};
-}
-
-/**
- * Load data necessary for rendering content above the fold. This is the critical data
- * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
- */
-async function loadCriticalData({context}: LoaderFunctionArgs) {
-  const [{collections}] = await Promise.all([
-    context.storefront.query(FEATURED_COLLECTION_QUERY),
-    // Add other queries here, so that they are loaded in parallel
-  ]);
-
-  return {
-    featuredCollection: collections.nodes[0],
-  };
-}
-
-/**
- * Load data for rendering content below the fold. This data is deferred and will be
- * fetched after the initial page load. If it's unavailable, the page should still 200.
- * Make sure to not throw any errors here, as it will cause the page to 500.
- */
-function loadDeferredData({context}: LoaderFunctionArgs) {
-  const recommendedProducts = context.storefront
-    .query(RECOMMENDED_PRODUCTS_QUERY)
-    .catch((error) => {
-      // Log query errors, but don't throw them so the page can still render
-      console.error(error);
-      return null;
-    });
-
-  return {
-    recommendedProducts,
-  };
-}
-
 export default function Homepage() {
-  const data = useLoaderData<typeof loader>();
   return (
-    <div className="home">
-      <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
-    </div>
-  );
-}
-
-function FeaturedCollection({
-  collection,
-}: {
-  collection: FeaturedCollectionFragment;
-}) {
-  if (!collection) return null;
-  const image = collection?.image;
-  return (
-    <Link
-      className="featured-collection"
-      to={`/collections/${collection.handle}`}
-    >
-      {image && (
-        <div className="featured-collection-image">
-          <Image data={image} sizes="100vw" />
+    <>
+      <section className="h-screen w-screen !p-0 !m-0">
+        <div className="relative h-full w-full flex items-center justify-start pl-24">
+          <div className="relative">
+            <h2 className="font-bevvy text-[#FF0000] !text-[128px] relative z-50">
+              Feel the Rush
+            </h2>
+            <p className="font-sewimple text-[#FF8181] !text-[32px] relative z-50 left-24 bottom-20">
+              All natural, zero compromise.
+            </p>
+          </div>
+          <div className="absolute top-0 left-0 w-full h-full bg-black">
+            <img
+              src={hero}
+              alt="Bevvy"
+              className="w-full h-full object-cover"
+            />
+          </div>
         </div>
-      )}
-      <h1>{collection.title}</h1>
-    </Link>
-  );
-}
-
-function RecommendedProducts({
-  products,
-}: {
-  products: Promise<RecommendedProductsQuery | null>;
-}) {
-  return (
-    <div className="recommended-products">
-      <h2>Recommended Products</h2>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Await resolve={products}>
-          {(response) => (
-            <div className="recommended-products-grid">
-              {response
-                ? response.products.nodes.map((product) => (
-                    <ProductItem key={product.id} product={product} />
-                  ))
-                : null}
+      </section>
+      <section className="h-screen w-screen !p-0 !m-0">
+        <div className="bg-[#FF0000] relative h-full w-full flex items-center justify-start pl-24">
+          <div>
+            <div className="relative flex flex-col gap-10">
+              <h2 className="font-bevvy text-white !text-[128px] relative z-50">
+                Bevvy?
+              </h2>
+              <p className="max-w-2xl font-sewimple text-white !text-[24px] relative z-50 tracking-wide">
+                A game-changing functional beverage that occupies the spectrum
+                between energy and relaxation, focus and fun, stimulation and
+                smoothness.<br />
+                <br />{" "}
+                With Bevvy, you get the best of both worlds—a clear mind and an
+                elevated mood, all without the crash, hangover, or habit-forming
+                properties of alternatives. It&apos;s a new category of
+                experience, and we&apos;re proud to pioneer it.
+              </p>
+              <Link
+                to="/products"
+                className="group w-fit bg-black hover:bg-white  px-10 py-4 rounded-full font-bevvy text-[24px] relative z-50 transition-all duration-300 hover:cursor-pointer"
+              >
+                <span className="transition-all duration-300 group-hover:text-black text-white">
+                  Get Bevvy
+                </span>
+              </Link>
             </div>
-          )}
-        </Await>
-      </Suspense>
-      <br />
-    </div>
+            <div className="bg-white rounded-full">
+              <img
+                src={row}
+                alt="Bevvy"
+                className="absolute top-0 right-0 w-1/2 h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="!p-0 !m-0">
+        <div className="bg-neutral-900 relative h-full w-full flex flex-col justify-center items-center gap-24 px-24">
+          <div className="h-full w-full pt-24">
+            <h2 className="font-sewimple text-white !text-[100px] relative z-50">
+              Engineered by nature.
+            </h2>
+            <h2 className="font-sewimple text-white !text-[100px] relative z-50">
+              Perfected by science.
+            </h2>
+            <p className="max-w-3xl font-sewimple text-white !text-[24px] relative z-50 tracking-wide">
+              Bevvy&apos;s a serious drink for the fun at heart. Our
+              meticulously crafted, research-backed formula is designed to help
+              you keep your flow, and have fun doing it.
+            </p>
+            <ProductOverview />
+          </div>
+        </div>
+      </section>
+      <section className="bg-neutral-900 text-white px-4 h-full w-full font-sewimple tracking-wide">
+        <FAQ />
+      </section>
+      {
+        /* <section className="h-screen w-screen !p-0 !m-0">
+        <div>
+          <div className="flex flex-col justify-end items-end">
+            <h2 className="font-sewimple text-white !text-[100px] relative z-50">
+              It&apos;s a new feeling.
+            </h2>
+            <p className="max-w-3xl font-sewimple text-white !text-[24px] relative z-50 tracking-wide">
+              What does Bevvy feel like? It&apos;s the heightened awareness of
+              caffeine without the jitters. The social ease of a cocktail
+              without the impairment. The focus of a productivity hack with a
+              smile to boot.
+            </p>
+            <br />
+          </div>
+          <div>
+            <p>
+              Bevvy is perfect for a productive work session, social gathering,
+              or creative endeavor. Unlike other drinks, Bevvy leaves you
+              feeling refreshed rather than depleted. No crash. No hangover. No
+              regrets. Just a premium functional experience that enhances your
+              natural capabilities without compromise.
+            </p>
+          </div>
+        </div> */
+      }
+      {/* </section> */}
+    </>
   );
 }
-
-const FEATURED_COLLECTION_QUERY = `#graphql
-  fragment FeaturedCollection on Collection {
-    id
-    title
-    image {
-      id
-      url
-      altText
-      width
-      height
-    }
-    handle
-  }
-  query FeaturedCollection($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...FeaturedCollection
-      }
-    }
-  }
-` as const;
-
-const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-  fragment RecommendedProduct on Product {
-    id
-    title
-    handle
-    priceRange {
-      minVariantPrice {
-        amount
-        currencyCode
-      }
-    }
-    featuredImage {
-      id
-      url
-      altText
-      width
-      height
-    }
-  }
-  query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...RecommendedProduct
-      }
-    }
-  }
-` as const;
