@@ -3,6 +3,8 @@ import hero from "~/assets/hero.jpg";
 import row from "~/assets/bevvy_row.png";
 import ProductOverview from "~/components/ProductOverview";
 import FAQ from "~/components/FAQ";
+import Ingredients from "~/components/Ingredients";
+import ComeInClutch from "~/components/ComeInClutch";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Bevvy | Home" }];
@@ -84,36 +86,20 @@ export default function Homepage() {
           </div>
         </div>
       </section>
-      <section className="bg-neutral-900 text-white px-4 h-full w-full font-sewimple tracking-wide">
+      <section className="bg-neutral-900 text-white px-4 h-full w-full font-sewimple tracking-wide flex flex-col items-center">
+        <ComeInClutch />
+      </section>
+      <section className="bg-neutral-900 text-white px-4 h-full w-full font-sewimple tracking-wide flex flex-col items-center">
         <FAQ />
       </section>
       {
-        /* <section className="h-screen w-screen !p-0 !m-0">
-        <div>
-          <div className="flex flex-col justify-end items-end">
-            <h2 className="font-sewimple text-white !text-[100px] relative z-50">
-              It&apos;s a new feeling.
-            </h2>
-            <p className="max-w-3xl font-sewimple text-white !text-[24px] relative z-50 tracking-wide">
-              What does Bevvy feel like? It&apos;s the heightened awareness of
-              caffeine without the jitters. The social ease of a cocktail
-              without the impairment. The focus of a productivity hack with a
-              smile to boot.
-            </p>
-            <br />
-          </div>
-          <div>
-            <p>
-              Bevvy is perfect for a productive work session, social gathering,
-              or creative endeavor. Unlike other drinks, Bevvy leaves you
-              feeling refreshed rather than depleted. No crash. No hangover. No
-              regrets. Just a premium functional experience that enhances your
-              natural capabilities without compromise.
-            </p>
-          </div>
-        </div> */
+        /* <section className="bg-neutral-900 text-white px-4 font-sewimple tracking-wide">
+        <Ingredients />
+      </section> */
       }
-      {/* </section> */}
+      <section className="font-bevvy bg-neutral-900 text-neutral-600 px-4 h-full w-full">
+        <h1 className="!text-[250px] text-center">Bevvy</h1>
+      </section>
     </>
   );
 }

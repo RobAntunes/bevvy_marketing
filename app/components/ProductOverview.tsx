@@ -138,6 +138,14 @@ export default function ProductOverview() {
                                     Add to Cart
                                 </span>
                             </Link>
+                            <Link
+                                to="/products"
+                                className="group w-fit bg-black px-10 pt-4 pb-2 rounded-full font-bevvy text-[24px] relative z-50 transition-all duration-300 hover:cursor-pointer"
+                            >
+                                <span className="font-bevvy transition-all duration-300 text-white">
+                                    Subscribe
+                                </span>
+                            </Link>
                         </div>
                     </div>
                 </div>
