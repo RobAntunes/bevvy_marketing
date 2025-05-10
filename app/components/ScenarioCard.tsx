@@ -29,7 +29,7 @@ type ScenarioCardProps = {
     icon?: string;
     title?: { main: string; highlight: string };
     description?: string;
-    highlightText?: string[];
+    highlightText: string[];
     image?: string;
     stat?: { icon: string; text: string };
     ctaText?: string;
@@ -43,6 +43,7 @@ const ScenarioCard = ({
     description =
         "When that project is due tomorrow but your brain checked out hours ago.",
     highlightText,
+    image = "/api/placeholder/600/400",
     stat = { icon: "Clock", text: "3-4 hours of sustained effects" },
     ctaText = "Get it done",
     onClick = () => {},
@@ -68,7 +69,7 @@ const ScenarioCard = ({
 
     return (
         <div
-            className={`h-full rounded-xl relative overflow-hidden max-w-md mx-auto transition-all duration-300 transform text-balance ${
+            className={`h-full relative overflow-hidden max-w-md mx-auto transition-all duration-300 transform ${
                 isHovered ? "scale-102" : ""
             }`}
             style={{
@@ -86,7 +87,7 @@ const ScenarioCard = ({
                 className="absolute bottom-0 left-0 right-0 transition-all duration-500"
                 style={{
                     height: isHovered ? "180px" : "120px",
-                    background: "#ff8181",
+                    background: "#ff0000",
                     clipPath: isHovered
                         ? "polygon(0 30%, 100% 0, 100% 100%, 0 100%)"
                         : "polygon(0 40%, 100% 20%, 100% 100%, 0 100%)",
@@ -97,7 +98,7 @@ const ScenarioCard = ({
                 className="absolute bottom-0 left-0 right-0 transition-all duration-700 delay-100"
                 style={{
                     height: isHovered ? "120px" : "80px",
-                    background: "#ffffff",
+                    background: "#ff8181",
                     clipPath: isHovered
                         ? "polygon(0 40%, 100% 10%, 100% 100%, 0 100%)"
                         : "polygon(0 50%, 100% 40%, 100% 100%, 0 100%)",
@@ -107,7 +108,7 @@ const ScenarioCard = ({
             {/* Card Content */}
             <div className="relative h-full flex flex-col justify-between z-10 p-6 text-white">
                 {/* Top Badge */}
-                <div className="bg-white text-black rounded-full text-xs font-bold tracking-widest py-1 px-3 self-start mb-2 flex items-center">
+                <div className="bg-white text-black text-xs font-bold uppercase tracking-widest py-1 px-3 self-start mb-2 flex items-center">
                     <TypeIcon size={12} className="mr-1 text-[#ff0000]" />
                     <span>{type}</span>
                 </div>
@@ -128,8 +129,8 @@ const ScenarioCard = ({
 
                 {/* Content */}
                 <p className="text-white leading-tight text-sm flex flex-col items-center gap-6">
-                    {/* {description} */}
-                    {/* {Array.isArray(highlightText) && (
+                    {description}
+                    {Array.isArray(highlightText) && (
                         <ul className="list-disc list-inside pl-5 mt-2 flex flex-col gap-1 items-start">
                             {(highlightText as string[]).map((point, idx) => (
                                 <li
@@ -140,13 +141,13 @@ const ScenarioCard = ({
                                 </li>
                             ))}
                         </ul>
-                    )} */}
+                    )}
                 </p>
                 <div>
                     {/* CTA Button */}
                     <button
                         onClick={onClick}
-                        className="hover:cursor-pointer rounded-lg shadow-lg border border-[#ffffff] mt-6 w-full flex items-center justify-between px-4 py-2 text-sm font-bold transition-all duration-300 bg-[#ff0000] hover:bg-[#ff8181] text-white"
+                        className="shadow-lg border border-[#ffffff] mt-6 w-full flex items-center justify-between px-4 py-2 text-sm font-bold transition-all duration-300 bg-[#ff0000] hover:bg-[#ff8181] text-white"
                     >
                         <span>{ctaText}</span>
                         <ChevronRight

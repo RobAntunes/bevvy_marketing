@@ -78,10 +78,10 @@ const navigation = {
 export default function Footer() {
   return (
     <footer className="bg-neutral-900 font-sewimple">
-      <div className="flex flex-col gap-12 mx-auto max-w-7xl overflow-hidden px-6 pb-20 sm:pb-24 lg:px-8">
+      <div className="flex flex-col gap-6 mx-auto max-w-7xl overflow-hidden px-6 pb-20 sm:pb-24 lg:px-8">
         <nav
           aria-label="Footer"
-          className="flex flex-wrap justify-center gap-x-12 text-sm/6"
+          className="flex flex-wrap justify-center gap-x-12 text-sm/6 mt-16"
         >
           {navigation.main.map((item) => (
             <a

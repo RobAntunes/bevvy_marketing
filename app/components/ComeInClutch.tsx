@@ -1,204 +1,129 @@
-import React, { useState } from "react";
-import ScenarioCard from "./ScenarioCard";
+import React from "react";
+import SoftScenarioPanel from "./ScenarioPanel";
 
 const scenarioCards = [
     {
-        id: "deadline-crusher",
-        type: "Work",
+        id: "clear-focus",
+        type: "FOCUS & CLARITY",
         icon: "Zap",
         title: {
-            main: "Deadline",
-            highlight: "Schmedline",
+            main: "SHARP",
+            highlight: "FOCUS",
         },
         description:
-            "When that project is due tomorrow but your brain checked out hours ago.",
+            "Enhance your mental clarity and attention for peak performance.",
         highlightText: [
-            "3-4 hours of clear-headed focus without jitters or crash.",
-            "No sugar, no crash, just pure productivity.",
-            "Stay locked in on your most important tasks."
+            "Sustained focus when it counts.",
+            "Mental clarity without jitters.",
+            "Stay in control of your day."
         ],
-        image: "/images/work-mode.jpg", // Replace with actual image path
+        image: "/images/work-mode.jpg",
         stat: {
             icon: "Clock",
-            text: "3-4 hours of sustained effects",
+            text: "Long-lasting effect",
         },
-        ctaText: "Lock in",
+        ctaText: "LEVEL UP",
     },
     {
-        id: "social-butterfly",
-        type: "Socialize",
+        id: "positive-mood",
+        type: "SOCIAL ENERGY",
         icon: "Users",
         title: {
-            main: "Conversation",
-            highlight: "Catalyst",
+            main: "SOCIAL",
+            highlight: "DRIVE",
         },
-        description: "For when small talk feels like climbing Everest.",
+        description: "Boost your confidence and conversational energy in any setting.",
         highlightText: [
-            "Noticeable mood elevation.",
-            "Social openness without losing coordination.",
-            "Feel at ease in any crowd."
+            "Enhanced social confidence.",
+            "Sharper wit and presence.",
+            "Command any room with ease."
         ],
-        image: "/images/social-scene.jpg", // Replace with actual image path
+        image: "/images/social-scene.jpg",
         stat: {
             icon: "Heart",
-            text: "Enhanced social confidence",
+            text: "Immediate impact",
         },
-        ctaText: "Enjoy",
+        ctaText: "STAND OUT",
     },
     {
-        id: "creative-breakthrough",
-        type: "Create",
+        id: "creative-thinking",
+        type: "CREATIVE POWER",
         icon: "Lightbulb",
         title: {
-            main: "Inspiration",
-            highlight: "Unlocked",
+            main: "BREAK",
+            highlight: "THROUGH",
         },
         description:
-            "When the ideas just won't come and the blank page is winning.",
+            "Unlock new perspectives and ideas when you need them most.",
         highlightText: [
-            "Enhances creative thinking and perspective.",
-            "Break through mental blocks.",
-            "Find your flow state faster."
+            "Overcome creative blocks.",
+            "See challenges differently.",
+            "Transform how you think."
         ],
-        image: "/images/creative-flow.jpg", // Replace with actual image path
+        image: "/images/creative-flow.jpg",
         stat: {
             icon: "Brain",
-            text: "Sustained creative flow state",
+            text: "Cognitive enhancement",
         },
-        ctaText: "Make",
+        ctaText: "CREATE MORE",
     },
     {
-        id: "recovery-mode",
-        type: "Shift",
+        id: "balanced-moment",
+        type: "PERFORMANCE SHIFT",
         icon: "Sunset",
         title: {
-            main: "Second",
-            highlight: "Wind",
+            main: "SEAMLESS",
+            highlight: "SHIFT",
         },
         description:
-            "For the days that never end and you need to transition from work to play.",
+            "Transition between states of mind without missing a beat.",
         highlightText: [
-            "Shift from work mode to social butterfly with ease.",
-            "No crash, no regrets.",
-            "Smooth transition for any occasion."
+            "Switch modes effortlessly.",
+            "No crash, just controlled transition.",
+            "Adapt to any situation quickly."
         ],
-        image: "/images/recovery-mode.jpg", // Replace with actual image path
+        image: "/images/recovery-mode.jpg",
         stat: {
             icon: "RefreshCw",
-            text: "Smooth transition without crash",
+            text: "Adaptive support",
         },
-        ctaText: "Change",
+        ctaText: "TRANSFORM",
     },
 ];
 
 const ComeInClutchSection = () => {
-    const [activeCardIndex, setActiveCardIndex] = useState(0);
-
-    // Function to handle card navigation
-    const nextCard = () => {
-        setActiveCardIndex((prev) => (prev + 1) % scenarioCards.length);
-    };
-
-    const prevCard = () => {
-        setActiveCardIndex((prev) =>
-            (prev - 1 + scenarioCards.length) % scenarioCards.length
-        );
-    };
-
-    // Get current card
-    const currentCard = scenarioCards[activeCardIndex];
-
     return (
-        <div className="container px-4 flex flex-col items-center font-sewimple tracking-wide">
+        <div className="container px-4 flex flex-col items-center bg-neutral-900 py-16">
             {/* Section Header */}
-            <div className="text-center mb-12 flex flex-col items-center">
-                <h2 className="!text-[124px] font-bold mb-4 font-sewimple">
-                    <span className="text-white">COME IN{" "}</span>
-                    <span className="text-[#ff0000]">CLUTCH</span>
+            <div className="text-center mb-10 flex flex-col items-center">
+                <h2 className="text-6xl md:text-8xl font-black mb-4 !text-[124px]">
+                    <span className="text-white">COME IN</span>
+                    <span className="text-red-600">CLUTCH</span>
                 </h2>
-                <p className="!text-[24px] max-w-3xl mx-auto text-center">
-                    With Bevvy, there is no line between performance and
-                    pleasure.
-                    <span className="block text-[#ff8181] font-semibold text-center">
-                        Go from zero to hero when it matters most.
-                    </span>
+                <p className="text-lg md:text-xl max-w-2xl mx-auto text-center text-gray-400">
+                    With Bevvy, there is no line between fun and performance.
+                    
                 </p>
             </div>
 
-            {/* Section Content - Desktop */}
-            <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6">
-                {scenarioCards.map((card, index) => (
-                    <div
-                        key={card.id}
-                        className="transform hover:-translate-y-2 transition-transform duration-300"
-                    >
-                        <ScenarioCard
-                            type={card.type}
-                            icon={card.icon}
-                            title={card.title}
-                            description={card.description}
-                            // highlightText={card.highlightText}
-                            image={card.image || "/api/placeholder/600/400"}
-                            stat={card.stat}
-                            ctaText={card.ctaText}
-                            onClick={() =>
-                                console.log(`Card ${card.id} clicked`)}
-                        />
-                    </div>
-                ))}
-            </div>
-
-            {/* Section Content - Mobile (Single Card Slider) */}
-            <div className="md:hidden">
-                <div className="relative">
-                    {/* Mobile navigation buttons */}
-                    <button
-                        onClick={prevCard}
-                        className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-[#ff0000] text-white w-8 h-8 flex items-center justify-center"
-                        style={{ left: "-8px" }}
-                    >
-                        ←
-                    </button>
-
-                    <div className="flex justify-center">
-                        <ScenarioCard
-                            type={currentCard.type}
-                            icon={currentCard.icon}
-                            title={currentCard.title}
-                            description={currentCard.description}
-                            highlightText={currentCard.highlightText}
-                            image={currentCard.image ||
-                                "/api/placeholder/600/400"}
-                            stat={currentCard.stat}
-                            ctaText={currentCard.ctaText}
-                            onClick={() =>
-                                console.log(`Card ${currentCard.id} clicked`)}
-                        />
-                    </div>
-
-                    <button
-                        onClick={nextCard}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-[#ff0000] text-white w-8 h-8 flex items-center justify-center"
-                        style={{ right: "-8px" }}
-                    >
-                        →
-                    </button>
-
-                    {/* Indicator dots */}
-                    <div className="flex justify-center mt-6 gap-2">
-                        {scenarioCards.map((_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setActiveCardIndex(index)}
-                                className={`w-2 h-2 rounded-full ${
-                                    index === activeCardIndex
-                                        ? "bg-[#ff0000]"
-                                        : "bg-gray-600"
-                                }`}
-                                aria-label={`Go to slide ${index + 1}`}
+            {/* Horizontally scrollable scenario panels */}
+            <div className="w-full overflow-x-auto pb-4">
+                <div className="flex flex-row gap-4 md:gap-8 snap-x snap-mandatory w-fit">
+                    {scenarioCards.map((card, index) => (
+                        <div key={card.id} className="snap-center">
+                            <SoftScenarioPanel
+                                icon={card.icon}
+                                title={card.title.main}
+                                highlight={card.title.highlight}
+                                description={card.description}
+                                highlightText={card.highlightText}
+                                stat={card.stat}
+                                ctaText={card.ctaText}
+                                image={card.image}
+                                onClick={() => console.log(`Panel ${card.id} clicked`)}
                             />
-                        ))}
-                    </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

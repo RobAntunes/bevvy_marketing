@@ -28,7 +28,6 @@ export function PageLayout({
   cart,
   children = null,
   header,
-  footer,
   isLoggedIn,
   publicStoreDomain,
 }: PageLayoutProps) {
