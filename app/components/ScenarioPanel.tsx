@@ -95,13 +95,13 @@ const ScenarioPanel: React.FC<SoftScenarioPanelProps> = ({
 
                 {/* Bottom area with button */}
                 <div className="mt-auto mb-4">
-                    <button
-                        onClick={onClick}
-                        className="rounded-md border-white border shadow-md z-50 relative bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-5 transition-all duration-300 flex items-center"
+                    <a
+                        href="/collections"
+                        className="rounded-md hover:cursor-pointer !text-white border-white border shadow-md z-50 relative bg-red-600 hover:bg-red-500 font-bold py-3 px-5 transition-all duration-300 flex items-center"
                     >
                         <span>{ctaText}</span>
                         <ChevronRight size={18} className="ml-2" />
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

@@ -31,6 +31,7 @@ export function PageLayout({
   isLoggedIn,
   publicStoreDomain,
 }: PageLayoutProps) {
+  console.log(header);
   return (
     <Aside.Provider>
       <CartAside cart={cart} />

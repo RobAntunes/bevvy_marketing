@@ -6,7 +6,7 @@ import { ProductItem } from "~/components/ProductItem";
 import { Product } from "@shopify/hydrogen/storefront-api-types";
 
 export const meta: MetaFunction<typeof loader> = () => {
-  return [{ title: `Hydrogen | Products` }];
+  return [{ title: `Bevvy | Shop` }];
 };
 
 export async function loader(args: LoaderFunctionArgs) {
@@ -31,7 +31,7 @@ async function loadCriticalData({ context, request }: LoaderFunctionArgs) {
 
   const [{ products }] = await Promise.all([
     storefront.query(FIRST_PRODUCT_ITEM_FRAGMENT, {
-      variables: { ...paginationVariables },
+      variables: paginationVariables as any,
     }),
     // Add other queries here, so that they are loaded in parallel
   ]);
@@ -51,20 +51,27 @@ export default function Collection() {
   const { products } = useLoaderData<typeof loader>();
 
   return (
-    <div className="p-12 w-screen h-screen">
-      <h1>Products</h1>
-      <PaginatedResourceSection
-        connection={products}
-        resourcesClassName="products-grid"
-      >
-        {({ node: product, index }: { node: Product; index: number }) => (
-          <ProductItem
-            key={product.id}
-            product={product}
-            loading={index < 8 ? "eager" : undefined}
-          />
-        )}
-      </PaginatedResourceSection>
+    <div className="p-12 w-full">
+      <h1 className="text-4xl font-sewimple text-neutral-900">
+        Products
+      </h1>
+
+      <div className="flex flex-col lg:flex-row gap-8 mt-8">
+        <div className="lg:w-2/3">
+          <PaginatedResourceSection
+            connection={products as any}
+            resourcesClassName="products-grid"
+          >
+            {({ node: product, index }: { node: Product; index: number }) => (
+              <ProductItem
+                key={product.id}
+                product={product}
+                loading={index < 8 ? "eager" : undefined}
+              />
+            )}
+          </PaginatedResourceSection>
+        </div>
+      </div>
     </div>
   );
 }
@@ -74,8 +81,13 @@ const FIRST_PRODUCT_ITEM_FRAGMENT = `#graphql
     amount
     currencyCode
   }
-  query Products {
-    products(first:1) {
+  query Products($first: Int, $last: Int, $startCursor: String, $endCursor: String) {
+    products(
+      first: $first,
+      last: $last,
+      before: $startCursor,
+      after: $endCursor
+    ) {
       nodes {
         id
         title

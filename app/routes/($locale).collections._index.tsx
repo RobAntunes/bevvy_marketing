@@ -74,7 +74,7 @@ function CollectionItem({
   return (
     <Link
       className="collection-item"
-      key={collection.id}
+      key={index}
       to={`/collections/${collection.handle}`}
       prefetch="intent"
     >
