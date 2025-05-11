@@ -166,7 +166,7 @@ export default function Product() {
             {/* Title and Price */}
             <div className="border-b border-gray-100 pb-6">
               <h1 className="!text-[96px] font-bevvy text-neutral-900 mb-2">
-                {title}
+                {title} - {selectedVariant?.title}
               </h1>
               <div className="text-2xl text-gray-700 mb-2 font-sewimple">
                 Drink to enhance your mood and energy
