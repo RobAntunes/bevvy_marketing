@@ -24,10 +24,11 @@ export function ProductForm({
   productOptions: MappedProductOptions[];
   selectedVariant: ProductFragment["selectedOrFirstAvailableVariant"];
   sellingPlanGroups?: ProductWithSellingPlans["sellingPlanGroups"];
-  selectedSellingPlan?: SellingPlanFragment | null;
+  selectedSellingPlan?: any | null;
 }) {
   const navigate = useNavigate();
   const { open } = useAside();
+  const [quantity, setQuantity] = useState(1);
 
   const hasSubscriptions = !!sellingPlanGroups &&
     Array.isArray(sellingPlanGroups.nodes) &&
@@ -52,6 +53,9 @@ export function ProductForm({
       });
     }
   };
+
+  const incrementQuantity = () => setQuantity((prev) => prev + 1);
+  const decrementQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
 
   return (
     <div className="product-form">
@@ -194,8 +198,8 @@ export function ProductForm({
           <h2 className="text-lg font-semibold mb-2">Delivery frequency:</h2>
           <div className="mb-4">
             <SellingPlanSelector
-              sellingPlanGroups={sellingPlanGroups}
-              selectedSellingPlan={selectedSellingPlan || null}
+              sellingPlanGroups={sellingPlanGroups as any}
+              selectedSellingPlan={selectedSellingPlan}
               paramKey="selling_plan"
             >
               {({ sellingPlanGroup }) => (
@@ -209,10 +213,33 @@ export function ProductForm({
         </div>
       )}
 
+      {/* Quantity Selector */}
+      <div className="mt-6 mb-4">
+        <div className="font-semibold mb-3">Quantity:</div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={decrementQuantity}
+            disabled={quantity <= 1}
+            className="h-10 w-10 flex items-center justify-center rounded-full border border-gray-300 text-neutral-600 disabled:opacity-50 hover:bg-gray-100 transition-colors"
+            aria-label="Decrease quantity"
+          >
+            -
+          </button>
+          <span className="text-xl font-medium w-10 text-center">{quantity}</span>
+          <button
+            onClick={incrementQuantity}
+            className="h-10 w-10 flex items-center justify-center rounded-full border border-gray-300 text-neutral-600 hover:bg-gray-100 transition-colors"
+            aria-label="Increase quantity"
+          >
+            +
+          </button>
+        </div>
+      </div>
+      
       {/* Add to Cart and Subscribe Buttons */}
       <div className="mt-4">
         {/* Single button for both one-time purchase and subscription */}
-        <div className="mt-2 group w-fit bg-[#FF0000] px-8 pt-4 pb-2 rounded-full font-bevvy text-[24px] relative z-50 transition-all duration-300 text-white hover:bg-[#FF8181] hover:text-[#FF0000] hover:cursor-pointer">
+        <div className="my-4 group w-fit bg-[#FF0000] px-8 pt-4 pb-2 rounded-full font-bevvy text-[24px] relative z-50 transition-all duration-300 text-white hover:bg-[#FF8181] hover:text-[#FF0000] hover:cursor-pointer">
           <AddToCartButton
             disabled={!selectedVariant || !selectedVariant.availableForSale ||
               (purchaseType === "subscribe" && !selectedSellingPlan)}
@@ -223,7 +250,7 @@ export function ProductForm({
               ? [
                 {
                   merchandiseId: selectedVariant.id,
-                  quantity: 1,
+                  quantity,
                   selectedVariant,
                   ...(purchaseType === "subscribe" && selectedSellingPlan &&
                     { sellingPlanId: selectedSellingPlan.id }),

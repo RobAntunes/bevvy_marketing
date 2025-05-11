@@ -35,15 +35,15 @@ export default function FAQ() {
     const [open, setOpen] = useState<number | null>(null);
 
     return (
-        <div className="mx-auto py-16">
-            <h2 className="font-bold text-white !text-[64px] text-center mb-16">
+        <div className="w-full mx-auto py-12 sm:py-16 lg:py-20 flex flex-col items-center gap-10">
+            <h2 className="font-bold text-white !text-4xl sm:!text-5xl md:!text-6xl lg:!text-7xl text-center mb-10 sm:mb-12 md:mb-16">
                 Frequently Asked Questions
             </h2>
-            <dl className="!mt-16 divide-y w-1/2 !mx-auto divide-white/20 py-12 bg-white/5 rounded-2xl shadow-xl">
+            <dl className="lg:rounded-xl w-full max-w-xl lg:max-w-2xl xl:max-w-3xl mx-auto divide-y divide-white/20 py-6 sm:py-8 md:py-10 bg-white/5 lg;rounded-2xl shadow-xl">
                 {faqs.map((faq, idx) => (
                     <div
                         key={faq.question}
-                        className="py-8 first:pt-0 last:pb-0 px-12 text-white"
+                        className="py-4 sm:py-6 md:py-8 first:pt-0 last:pb-0 px-4 sm:px-6 md:px-8 lg:px-10 text-white"
                     >
                         <dt>
                             <button
@@ -54,20 +54,20 @@ export default function FAQ() {
                                 onClick={() =>
                                     setOpen(open === idx ? null : idx)}
                             >
-                                <span className="text-lg font-semibold">
+                                <span className="text-base sm:text-lg md:text-xl font-semibold">
                                     {faq.question}
                                 </span>
-                                <span className="ml-6 flex h-7 items-center">
+                                <span className="ml-4 sm:ml-6 flex h-7 items-center">
                                     {open === idx
                                         ? (
                                             <Minus
-                                                className="w-6 h-6"
+                                                className="w-5 h-5 sm:w-6 sm:h-6"
                                                 aria-hidden="true"
                                             />
                                         )
                                         : (
                                             <Plus
-                                                className="w-6 h-6"
+                                                className="w-5 h-5 sm:w-6 sm:h-6"
                                                 aria-hidden="true"
                                             />
                                         )}
@@ -75,14 +75,14 @@ export default function FAQ() {
                             </button>
                         </dt>
                         <dd
-                            className={`mt-2 pr-2 transition-all duration-300 text-neutral-500 ${
+                            className={`mt-2 pr-2 transition-all duration-300 text-neutral-400  ${
                                 open === idx
-                                    ? "max-h-96 h-auto pb-6 opacity-100"
+                                    ? "max-h-[500px] h-auto pb-4 sm:pb-6 opacity-100"
                                     : "max-h-0 opacity-0 overflow-hidden"
                             }`}
                             id={`faq-${idx}`}
                         >
-                            <p className="text-base leading-relaxed">
+                            <p className="text-sm sm:text-base leading-relaxed">
                                 {faq.answer}
                             </p>
                         </dd>

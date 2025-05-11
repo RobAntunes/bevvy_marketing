@@ -4,7 +4,7 @@ import type { ProductFragment } from "storefrontapi.generated";
 export interface SellingPlanFragment {
   id: string;
   name?: string;
-  description?: string;
+  description?: string | null;
   options?: Array<{
     name: string;
     value: string;
