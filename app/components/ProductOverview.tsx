@@ -131,19 +131,11 @@ export default function ProductOverview() {
                         </div>
                         <div className="h-full w-full flex items-end gap-6 text-white">
                             <Link
-                                to="/products"
+                                to="/products/bevvy"
                                 className="group w-fit bg-[#FF0000] px-10 pt-4 pb-2 rounded-full font-bevvy text-[24px] relative z-50 transition-all duration-300 hover:cursor-pointer"
                             >
                                 <span className="font-bevvy transition-all duration-300 text-white">
                                     Add to Cart
-                                </span>
-                            </Link>
-                            <Link
-                                to="/products"
-                                className="group w-fit bg-black px-10 pt-4 pb-2 rounded-full font-bevvy text-[24px] relative z-50 transition-all duration-300 hover:cursor-pointer"
-                            >
-                                <span className="font-bevvy transition-all duration-300 text-white">
-                                    Subscribe
                                 </span>
                             </Link>
                         </div>

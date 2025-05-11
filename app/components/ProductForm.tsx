@@ -8,16 +8,50 @@ import { useAside } from "./Aside";
 import type { ProductFragment } from "storefrontapi.generated";
 import { Money } from "@shopify/hydrogen";
 import { AddToCartButton } from "./AddToCartButton";
+import { SellingPlanGroup, SellingPlanSelector } from "./SellingPlanSelector";
+import type {
+  ProductWithSellingPlans,
+  SellingPlanFragment,
+} from "~/types/subscription";
+import { useState } from "react";
 
 export function ProductForm({
   productOptions,
   selectedVariant,
+  sellingPlanGroups,
+  selectedSellingPlan,
 }: {
   productOptions: MappedProductOptions[];
   selectedVariant: ProductFragment["selectedOrFirstAvailableVariant"];
+  sellingPlanGroups?: ProductWithSellingPlans["sellingPlanGroups"];
+  selectedSellingPlan?: SellingPlanFragment | null;
 }) {
   const navigate = useNavigate();
   const { open } = useAside();
+
+  const hasSubscriptions = !!sellingPlanGroups &&
+    Array.isArray(sellingPlanGroups.nodes) &&
+    sellingPlanGroups.nodes.length > 0;
+
+  // Track whether to show subscription options
+  const [purchaseType, setPurchaseType] = useState<"one-time" | "subscribe">(
+    selectedSellingPlan ? "subscribe" : "one-time",
+  );
+
+  // Handle radio selection change
+  const handlePurchaseTypeChange = (type: "one-time" | "subscribe") => {
+    setPurchaseType(type);
+
+    // If switching to one-time purchase, remove any selling plan selection from URL
+    if (type === "one-time" && selectedSellingPlan) {
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.delete("selling_plan");
+      navigate(currentUrl.pathname + currentUrl.search, {
+        replace: true,
+        preventScrollReset: true,
+      });
+    }
+  };
 
   return (
     <div className="product-form">
@@ -105,38 +139,101 @@ export function ProductForm({
       })}
 
       {/* Shipping Note */}
-      <div className="bg-blue-50 border border-blue-100 rounded p-4 flex items-center">
+      <div className="bg-blue-50 border border-blue-100 rounded mt-4 p-4 flex items-center">
         <div className="text-blue-600 font-medium">
           Free shipping on all orders over $80
         </div>
       </div>
 
+      <span className="text-gray-700 text-2xl inline-block mt-6">
+        {selectedVariant?.title}
+      </span>
+
       {/* Price Display */}
       {selectedVariant?.price && (
-        <div className="mt-4 text-2xl font-bold pb-4">
+        <div className="text-2xl font-bold pb-4">
           <Money data={selectedVariant.price} />
         </div>
       )}
 
-      {/* Add to Cart Button */}
-      <div className="mt-2 flex justify-center group w-fit bg-[#FF0000] px-10 pt-4 pb-2 rounded-full font-bevvy text-[24px] relative z-50 transition-all duration-300 text-white hover:bg-[#FF8181] hover:text-[#FF0000] hover:cursor-pointer">
-        <AddToCartButton
-          disabled={!selectedVariant}
-          onClick={() => {
-            open("cart");
-          }}
-          lines={selectedVariant
-            ? [
-              {
-                merchandiseId: selectedVariant.id,
-                quantity: 1,
-                selectedVariant,
-              },
-            ]
-            : []}
-        >
-          Add to cart
-        </AddToCartButton>
+      {/* Purchase Type Selection - Only show if subscriptions are available */}
+      {hasSubscriptions && (
+        <div className="mt-6 mb-4">
+          <div className="font-semibold mb-3">Choose a purchase option:</div>
+          <div className="flex gap-6">
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="radio"
+                name="purchaseType"
+                value="one-time"
+                checked={purchaseType === "one-time"}
+                onChange={() => handlePurchaseTypeChange("one-time")}
+                className="mr-2 h-4 w-4 accent-[#FF0000]"
+              />
+              <span>One-time purchase</span>
+            </label>
+
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="radio"
+                name="purchaseType"
+                value="subscribe"
+                checked={purchaseType === "subscribe"}
+                onChange={() => handlePurchaseTypeChange("subscribe")}
+                className="mr-2 h-4 w-4 accent-[#FF0000]"
+              />
+              <span>Subscribe & save</span>
+            </label>
+          </div>
+        </div>
+      )}
+
+      {/* Subscription Options - Only show when subscriptions are available and selected */}
+      {hasSubscriptions && purchaseType === "subscribe" && (
+        <div className="mt-4">
+          <h2 className="text-lg font-semibold mb-2">Delivery frequency:</h2>
+          <div className="mb-4">
+            <SellingPlanSelector
+              sellingPlanGroups={sellingPlanGroups}
+              selectedSellingPlan={selectedSellingPlan || null}
+              paramKey="selling_plan"
+            >
+              {({ sellingPlanGroup }) => (
+                <SellingPlanGroup
+                  key={sellingPlanGroup.name}
+                  sellingPlanGroup={sellingPlanGroup}
+                />
+              )}
+            </SellingPlanSelector>
+          </div>
+        </div>
+      )}
+
+      {/* Add to Cart and Subscribe Buttons */}
+      <div className="mt-4">
+        {/* Single button for both one-time purchase and subscription */}
+        <div className="mt-2 group w-fit bg-[#FF0000] px-8 pt-4 pb-2 rounded-full font-bevvy text-[24px] relative z-50 transition-all duration-300 text-white hover:bg-[#FF8181] hover:text-[#FF0000] hover:cursor-pointer">
+          <AddToCartButton
+            disabled={!selectedVariant || !selectedVariant.availableForSale ||
+              (purchaseType === "subscribe" && !selectedSellingPlan)}
+            onClick={() => {
+              open("cart");
+            }}
+            lines={selectedVariant
+              ? [
+                {
+                  merchandiseId: selectedVariant.id,
+                  quantity: 1,
+                  selectedVariant,
+                  ...(purchaseType === "subscribe" && selectedSellingPlan &&
+                    { sellingPlanId: selectedSellingPlan.id }),
+                },
+              ]
+              : []}
+          >
+            {purchaseType === "subscribe" ? "Subscribe Now" : "Add to Cart"}
+          </AddToCartButton>
+        </div>
       </div>
     </div>
   );
