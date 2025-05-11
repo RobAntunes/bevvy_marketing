@@ -30,7 +30,7 @@ const scenarioCards = [
         id: "positive-mood",
         type: "SOCIAL ENERGY",
         icon: "Users",
-        badge: "Socialize",
+        badge: "Social",
         title: {
             main: "Smooth",
             highlight: "Talker",

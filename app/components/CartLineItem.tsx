@@ -1,21 +1,21 @@
-import type {CartLineUpdateInput} from '@shopify/hydrogen/storefront-api-types';
-import type {CartLayout} from '~/components/CartMain';
-import {CartForm, Image, type OptimisticCartLine} from '@shopify/hydrogen';
-import {useVariantUrl} from '~/lib/variants';
-import {Link} from '@remix-run/react';
-import {ProductPrice} from './ProductPrice';
-import {useAside} from './Aside';
-import type {CartApiQueryFragment} from 'storefrontapi.generated';
+import type { CartLineUpdateInput } from "@shopify/hydrogen/storefront-api-types";
+import type { CartLayout } from "~/components/CartMain";
+import { CartForm, Image, type OptimisticCartLine } from "@shopify/hydrogen";
+import { useVariantUrl } from "~/lib/variants";
+import { Link } from "@remix-run/react";
+import { ProductPrice } from "./ProductPrice";
+import { useAside } from "./Aside";
+import type { CartApiQueryFragment } from "storefrontapi.generated";
 
-// Extended CartLine type that includes sellingPlanAllocation
+// Modified CartLine type to accept the actual API structure
 type CartLine = OptimisticCartLine<CartApiQueryFragment> & {
   sellingPlanAllocation?: {
     sellingPlan: {
       id: string;
       name: string;
-      description?: string;
+      description?: string | null;
     };
-  };
+  } | null;
 };
 
 /**
@@ -29,13 +29,13 @@ export function CartLineItem({
   layout: CartLayout;
   line: CartLine;
 }) {
-  const {id, merchandise} = line;
-  const {product, title, image, selectedOptions} = merchandise;
+  const { id, merchandise } = line;
+  const { product, title, image, selectedOptions } = merchandise;
   const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
-  const {close} = useAside();
-  
-  // Safe access to sellingPlanAllocation
-  const sellingPlanAllocation = line.sellingPlanAllocation;
+  const { close } = useAside();
+
+  // Safe access to sellingPlanAllocation with null check
+  const sellingPlanAllocation = line.sellingPlanAllocation || null;
 
   return (
     <li key={id} className="cart-line pt-6 pb-2">
@@ -47,7 +47,7 @@ export function CartLineItem({
               prefetch="intent"
               to={lineItemUrl}
               onClick={() => {
-                if (layout === 'aside') {
+                if (layout === "aside") {
                   close();
                 }
               }}
@@ -75,7 +75,7 @@ export function CartLineItem({
                 prefetch="intent"
                 to={lineItemUrl}
                 onClick={() => {
-                  if (layout === 'aside') {
+                  if (layout === "aside") {
                     close();
                   }
                 }}
@@ -85,27 +85,27 @@ export function CartLineItem({
                   {product.title}
                 </p>
               </Link>
-              
+
               {/* Price */}
               <div className="mt-1 font-semibold text-neutral-900">
                 <ProductPrice price={line?.cost?.totalAmount} />
               </div>
-              
+
               {/* Options */}
               {selectedOptions.length > 0 && (
                 <ul className="mt-1 space-y-1">
                   {selectedOptions.map((option) => (
                     <li key={option.name}>
                       <span className="text-sm text-neutral-500">
-                        {option.name}: {option.value}
+                        {option.value}
                       </span>
                     </li>
                   ))}
                 </ul>
               )}
-              
+
               {/* Subscription details */}
-              {sellingPlanAllocation && (
+              {sellingPlanAllocation && sellingPlanAllocation.sellingPlan && (
                 <div className="mt-2">
                   <span className="inline-block px-2 py-1 bg-red-100 text-red-700 text-xs font-medium rounded">
                     {sellingPlanAllocation.sellingPlan.name}
@@ -113,7 +113,7 @@ export function CartLineItem({
                 </div>
               )}
             </div>
-            
+
             {/* Quantity Controls in a separate flex column */}
             <div className="flex flex-col items-end">
               <CartLineQuantity line={line} />
@@ -130,18 +130,18 @@ export function CartLineItem({
  * These controls are disabled when the line item is new, and the server
  * hasn't yet responded that it was successfully added to the cart.
  */
-function CartLineQuantity({line}: {line: CartLine}) {
-  if (!line || typeof line?.quantity === 'undefined') return null;
-  const {id: lineId, quantity, isOptimistic} = line;
+function CartLineQuantity({ line }: { line: CartLine }) {
+  if (!line || typeof line?.quantity === "undefined") return null;
+  const { id: lineId, quantity, isOptimistic } = line;
   const prevQuantity = Number(Math.max(0, quantity - 1).toFixed(0));
   const nextQuantity = Number((quantity + 1).toFixed(0));
 
   return (
     <div className="cart-line-quantity flex flex-col items-end space-y-2">
       <div className="text-sm text-neutral-500 mb-1">Quantity: {quantity}</div>
-      
+
       <div className="flex items-center space-x-1">
-        <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
+        <CartLineUpdateButton lines={[{ id: lineId, quantity: prevQuantity }]}>
           <button
             aria-label="Decrease quantity"
             disabled={quantity <= 1 || !!isOptimistic}
@@ -152,8 +152,8 @@ function CartLineQuantity({line}: {line: CartLine}) {
             <span>&#8722;</span>
           </button>
         </CartLineUpdateButton>
-        
-        <CartLineUpdateButton lines={[{id: lineId, quantity: nextQuantity}]}>
+
+        <CartLineUpdateButton lines={[{ id: lineId, quantity: nextQuantity }]}>
           <button
             aria-label="Increase quantity"
             name="increase-quantity"
@@ -165,7 +165,7 @@ function CartLineQuantity({line}: {line: CartLine}) {
           </button>
         </CartLineUpdateButton>
       </div>
-      
+
       <CartLineRemoveButton lineIds={[lineId]} disabled={!!isOptimistic} />
     </div>
   );
@@ -188,10 +188,10 @@ function CartLineRemoveButton({
       fetcherKey={getUpdateKey(lineIds)}
       route="/cart"
       action={CartForm.ACTIONS.LinesRemove}
-      inputs={{lineIds}}
+      inputs={{ lineIds }}
     >
-      <button 
-        disabled={disabled} 
+      <button
+        disabled={disabled}
         type="submit"
         className="text-sm text-red-600 hover:text-red-800 disabled:opacity-50 transition-colors"
       >
@@ -215,7 +215,7 @@ function CartLineUpdateButton({
       fetcherKey={getUpdateKey(lineIds)}
       route="/cart"
       action={CartForm.ACTIONS.LinesUpdate}
-      inputs={{lines}}
+      inputs={{ lines }}
     >
       {children}
     </CartForm>
@@ -230,5 +230,5 @@ function CartLineUpdateButton({
  * @returns
  */
 function getUpdateKey(lineIds: string[]) {
-  return [CartForm.ACTIONS.LinesUpdate, ...lineIds].join('-');
+  return [CartForm.ACTIONS.LinesUpdate, ...lineIds].join("-");
 }

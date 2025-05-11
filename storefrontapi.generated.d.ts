@@ -20,6 +20,29 @@ export type CartLineFragment = Pick<
       Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
     >;
   };
+  sellingPlanAllocation?: StorefrontAPI.Maybe<{
+    sellingPlan: Pick<
+      StorefrontAPI.SellingPlan,
+      'id' | 'name' | 'description'
+    > & {
+      options: Array<Pick<StorefrontAPI.SellingPlanOption, 'name' | 'value'>>;
+      priceAdjustments: Array<
+        Pick<StorefrontAPI.SellingPlanPriceAdjustment, 'orderCount'> & {
+          adjustmentValue:
+            | {
+                adjustmentAmount: Pick<
+                  StorefrontAPI.MoneyV2,
+                  'currencyCode' | 'amount'
+                >;
+              }
+            | Pick<
+                StorefrontAPI.SellingPlanPercentagePriceAdjustment,
+                'adjustmentPercentage'
+              >;
+        }
+      >;
+    };
+  }>;
   merchandise: Pick<
     StorefrontAPI.ProductVariant,
     'id' | 'availableForSale' | 'requiresShipping' | 'title'
@@ -50,6 +73,9 @@ export type CartLineComponentFragment = Pick<
       Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
     >;
   };
+  sellingPlanAllocation?: StorefrontAPI.Maybe<{
+    sellingPlan: Pick<StorefrontAPI.SellingPlan, 'id' | 'name' | 'description'>;
+  }>;
   merchandise: Pick<
     StorefrontAPI.ProductVariant,
     'id' | 'availableForSale' | 'requiresShipping' | 'title'
@@ -102,6 +128,31 @@ export type CartApiQueryFragment = Pick<
               Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
             >;
           };
+          sellingPlanAllocation?: StorefrontAPI.Maybe<{
+            sellingPlan: Pick<
+              StorefrontAPI.SellingPlan,
+              'id' | 'name' | 'description'
+            > & {
+              options: Array<
+                Pick<StorefrontAPI.SellingPlanOption, 'name' | 'value'>
+              >;
+              priceAdjustments: Array<
+                Pick<StorefrontAPI.SellingPlanPriceAdjustment, 'orderCount'> & {
+                  adjustmentValue:
+                    | {
+                        adjustmentAmount: Pick<
+                          StorefrontAPI.MoneyV2,
+                          'currencyCode' | 'amount'
+                        >;
+                      }
+                    | Pick<
+                        StorefrontAPI.SellingPlanPercentagePriceAdjustment,
+                        'adjustmentPercentage'
+                      >;
+                }
+              >;
+            };
+          }>;
           merchandise: Pick<
             StorefrontAPI.ProductVariant,
             'id' | 'availableForSale' | 'requiresShipping' | 'title'
@@ -137,6 +188,12 @@ export type CartApiQueryFragment = Pick<
               Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
             >;
           };
+          sellingPlanAllocation?: StorefrontAPI.Maybe<{
+            sellingPlan: Pick<
+              StorefrontAPI.SellingPlan,
+              'id' | 'name' | 'description'
+            >;
+          }>;
           merchandise: Pick<
             StorefrontAPI.ProductVariant,
             'id' | 'availableForSale' | 'requiresShipping' | 'title'
@@ -412,6 +469,28 @@ export type MoneyCollectionItemFragment = Pick<
   'amount' | 'currencyCode'
 >;
 
+export type SellingPlanFragmentFragment = Pick<
+  StorefrontAPI.SellingPlan,
+  'id' | 'name' | 'description'
+> & {
+  options: Array<Pick<StorefrontAPI.SellingPlanOption, 'name' | 'value'>>;
+  priceAdjustments: Array<
+    Pick<StorefrontAPI.SellingPlanPriceAdjustment, 'orderCount'> & {
+      adjustmentValue:
+        | {
+            adjustmentAmount: Pick<
+              StorefrontAPI.MoneyV2,
+              'amount' | 'currencyCode'
+            >;
+          }
+        | Pick<
+            StorefrontAPI.SellingPlanPercentagePriceAdjustment,
+            'adjustmentPercentage'
+          >;
+    }
+  >;
+};
+
 export type ProductsQueryVariables = StorefrontAPI.Exact<{
   first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
   last?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
@@ -444,6 +523,45 @@ export type ProductsQuery = {
           nodes: Array<Pick<StorefrontAPI.Image, 'url' | 'width' | 'height'>>;
         };
         metafield?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
+        sellingPlanGroups: {
+          nodes: Array<
+            Pick<StorefrontAPI.SellingPlanGroup, 'name'> & {
+              options: Array<
+                Pick<StorefrontAPI.SellingPlanGroupOption, 'name' | 'values'>
+              >;
+              sellingPlans: {
+                nodes: Array<
+                  Pick<
+                    StorefrontAPI.SellingPlan,
+                    'id' | 'name' | 'description'
+                  > & {
+                    options: Array<
+                      Pick<StorefrontAPI.SellingPlanOption, 'name' | 'value'>
+                    >;
+                    priceAdjustments: Array<
+                      Pick<
+                        StorefrontAPI.SellingPlanPriceAdjustment,
+                        'orderCount'
+                      > & {
+                        adjustmentValue:
+                          | {
+                              adjustmentAmount: Pick<
+                                StorefrontAPI.MoneyV2,
+                                'amount' | 'currencyCode'
+                              >;
+                            }
+                          | Pick<
+                              StorefrontAPI.SellingPlanPercentagePriceAdjustment,
+                              'adjustmentPercentage'
+                            >;
+                      }
+                    >;
+                  }
+                >;
+              };
+            }
+          >;
+        };
       }
     >;
     pageInfo: Pick<
@@ -809,6 +927,39 @@ export type ProductFragment = Pick<
     >;
   };
   seo: Pick<StorefrontAPI.Seo, 'description' | 'title'>;
+  sellingPlanGroups: {
+    nodes: Array<
+      Pick<StorefrontAPI.SellingPlanGroup, 'name'> & {
+        options: Array<
+          Pick<StorefrontAPI.SellingPlanGroupOption, 'name' | 'values'>
+        >;
+        sellingPlans: {
+          nodes: Array<
+            Pick<StorefrontAPI.SellingPlan, 'id' | 'name' | 'description'> & {
+              options: Array<
+                Pick<StorefrontAPI.SellingPlanOption, 'name' | 'value'>
+              >;
+              priceAdjustments: Array<
+                Pick<StorefrontAPI.SellingPlanPriceAdjustment, 'orderCount'> & {
+                  adjustmentValue:
+                    | {
+                        adjustmentAmount: Pick<
+                          StorefrontAPI.MoneyV2,
+                          'amount' | 'currencyCode'
+                        >;
+                      }
+                    | Pick<
+                        StorefrontAPI.SellingPlanPercentagePriceAdjustment,
+                        'adjustmentPercentage'
+                      >;
+                }
+              >;
+            }
+          >;
+        };
+      }
+    >;
+  };
 };
 
 export type ProductQueryVariables = StorefrontAPI.Exact<{
@@ -967,6 +1118,45 @@ export type ProductQuery = {
         >;
       };
       seo: Pick<StorefrontAPI.Seo, 'description' | 'title'>;
+      sellingPlanGroups: {
+        nodes: Array<
+          Pick<StorefrontAPI.SellingPlanGroup, 'name'> & {
+            options: Array<
+              Pick<StorefrontAPI.SellingPlanGroupOption, 'name' | 'values'>
+            >;
+            sellingPlans: {
+              nodes: Array<
+                Pick<
+                  StorefrontAPI.SellingPlan,
+                  'id' | 'name' | 'description'
+                > & {
+                  options: Array<
+                    Pick<StorefrontAPI.SellingPlanOption, 'name' | 'value'>
+                  >;
+                  priceAdjustments: Array<
+                    Pick<
+                      StorefrontAPI.SellingPlanPriceAdjustment,
+                      'orderCount'
+                    > & {
+                      adjustmentValue:
+                        | {
+                            adjustmentAmount: Pick<
+                              StorefrontAPI.MoneyV2,
+                              'amount' | 'currencyCode'
+                            >;
+                          }
+                        | Pick<
+                            StorefrontAPI.SellingPlanPercentagePriceAdjustment,
+                            'adjustmentPercentage'
+                          >;
+                    }
+                  >;
+                }
+              >;
+            };
+          }
+        >;
+      };
     }
   >;
 };
@@ -1217,7 +1407,7 @@ interface GeneratedQueryTypes {
     return: BlogsQuery;
     variables: BlogsQueryVariables;
   };
-  '#graphql\n  fragment MoneyCollectionItem on MoneyV2 {\n    amount\n    currencyCode\n  }\n  query Products($first: Int, $last: Int, $startCursor: String, $endCursor: String) {\n    products(\n      first: $first,\n      last: $last,\n      before: $startCursor,\n      after: $endCursor\n    ) {\n      nodes {\n        id\n        title\n        featuredImage {\n          url\n          altText\n          width\n          height\n        }\n        priceRange {\n          minVariantPrice {\n            ...MoneyCollectionItem\n          }\n          maxVariantPrice {\n            ...MoneyCollectionItem\n          }\n        }\n        handle\n        description\n        images(first:4) {\n          nodes {\n            url\n            width\n            height\n          }\n        }\n        metafield(namespace: "custom", key: "info") {\n          value\n        }\n      }\n      pageInfo {\n        hasPreviousPage\n        hasNextPage\n        endCursor\n        startCursor\n      }\n    }\n  }\n': {
+  '#graphql\n  fragment MoneyCollectionItem on MoneyV2 {\n    amount\n    currencyCode\n  }\n  fragment SellingPlanFragment on SellingPlan {\n    id\n    name\n    description\n    options {\n      name\n      value\n    }\n    priceAdjustments {\n      orderCount\n      adjustmentValue {\n        ... on SellingPlanFixedAmountPriceAdjustment {\n          adjustmentAmount {\n            ...MoneyCollectionItem\n          }\n        }\n        ... on SellingPlanPercentagePriceAdjustment {\n          adjustmentPercentage\n        }\n      }\n    }\n  }\n  query Products($first: Int, $last: Int, $startCursor: String, $endCursor: String) {\n    products(\n      first: $first,\n      last: $last,\n      before: $startCursor,\n      after: $endCursor\n    ) {\n      nodes {\n        id\n        title\n        featuredImage {\n          url\n          altText\n          width\n          height\n        }\n        priceRange {\n          minVariantPrice {\n            ...MoneyCollectionItem\n          }\n          maxVariantPrice {\n            ...MoneyCollectionItem\n          }\n        }\n        handle\n        description\n        images(first:4) {\n          nodes {\n            url\n            width\n            height\n          }\n        }\n        metafield(namespace: "custom", key: "info") {\n          value\n        }\n        sellingPlanGroups(first: 5) {\n          nodes {\n            name\n            options {\n              name\n              values\n            }\n            sellingPlans(first: 5) {\n              nodes {\n                ...SellingPlanFragment\n              }\n            }\n          }\n        }\n      }\n      pageInfo {\n        hasPreviousPage\n        hasNextPage\n        endCursor\n        startCursor\n      }\n    }\n  }\n': {
     return: ProductsQuery;
     variables: ProductsQueryVariables;
   };
@@ -1241,7 +1431,7 @@ interface GeneratedQueryTypes {
     return: PoliciesQuery;
     variables: PoliciesQueryVariables;
   };
-  '#graphql\n  query Product(\n    $country: CountryCode\n    $handle: String!\n    $language: LanguageCode\n    $selectedOptions: [SelectedOptionInput!]!\n  ) @inContext(country: $country, language: $language) {\n    product(handle: $handle) {\n      ...Product\n    }\n  }\n  #graphql\n  fragment Product on Product {\n    id\n    title\n    vendor\n    handle\n    descriptionHtml\n    description\n    encodedVariantExistence\n    encodedVariantAvailability\n    options {\n      name\n      optionValues {\n        name\n        firstSelectableVariant {\n          ...ProductVariant\n        }\n        swatch {\n          color\n          image {\n            previewImage {\n              url\n            }\n          }\n        }\n      }\n    }\n    selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {\n      ...ProductVariant\n    }\n    adjacentVariants (selectedOptions: $selectedOptions) {\n      ...ProductVariant\n    }\n    images(first: 10) {\n      nodes {\n        url\n        altText\n        width\n        height\n      }\n    }\n    seo {\n      description\n      title\n    }\n  }\n  #graphql\n  fragment ProductVariant on ProductVariant {\n    availableForSale\n    compareAtPrice {\n      amount\n      currencyCode\n    }\n    id\n    image {\n      __typename\n      id\n      url\n      altText\n      width\n      height\n    }\n    price {\n      amount\n      currencyCode\n    }\n    product {\n      title\n      handle\n      images(first: 10) {\n        nodes {\n          url\n          altText\n          width\n          height\n        }\n      }\n      priceRange {\n        minVariantPrice {\n          amount\n        }\n        maxVariantPrice {\n          amount\n        }\n      }\n    }\n    selectedOptions {\n      name\n      value\n    }\n    sku\n    title\n    unitPrice {\n      amount\n      currencyCode\n    }\n  }\n\n\n': {
+  '#graphql\n  query Product(\n    $country: CountryCode\n    $handle: String!\n    $language: LanguageCode\n    $selectedOptions: [SelectedOptionInput!]!\n  ) @inContext(country: $country, language: $language) {\n    product(handle: $handle) {\n      ...Product\n    }\n  }\n  #graphql\n  fragment Product on Product {\n    id\n    title\n    vendor\n    handle\n    descriptionHtml\n    description\n    encodedVariantExistence\n    encodedVariantAvailability\n    options {\n      name\n      optionValues {\n        name\n        firstSelectableVariant {\n          ...ProductVariant\n        }\n        swatch {\n          color\n          image {\n            previewImage {\n              url\n            }\n          }\n        }\n      }\n    }\n    selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {\n      ...ProductVariant\n    }\n    adjacentVariants (selectedOptions: $selectedOptions) {\n      ...ProductVariant\n    }\n    images(first: 10) {\n      nodes {\n        url\n        altText\n        width\n        height\n      }\n    }\n    seo {\n      description\n      title\n    }\n    sellingPlanGroups(first: 5) {\n      nodes {\n        name\n        options {\n          name\n          values\n        }\n        sellingPlans(first: 5) {\n          nodes {\n            id\n            name\n            description\n            options {\n              name\n              value\n            }\n            priceAdjustments {\n              orderCount\n              adjustmentValue {\n                ... on SellingPlanFixedAmountPriceAdjustment {\n                  adjustmentAmount {\n                    amount\n                    currencyCode\n                  }\n                }\n                ... on SellingPlanPercentagePriceAdjustment {\n                  adjustmentPercentage\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n  #graphql\n  fragment ProductVariant on ProductVariant {\n    availableForSale\n    compareAtPrice {\n      amount\n      currencyCode\n    }\n    id\n    image {\n      __typename\n      id\n      url\n      altText\n      width\n      height\n    }\n    price {\n      amount\n      currencyCode\n    }\n    product {\n      title\n      handle\n      images(first: 10) {\n        nodes {\n          url\n          altText\n          width\n          height\n        }\n      }\n      priceRange {\n        minVariantPrice {\n          amount\n        }\n        maxVariantPrice {\n          amount\n        }\n      }\n    }\n    selectedOptions {\n      name\n      value\n    }\n    sku\n    title\n    unitPrice {\n      amount\n      currencyCode\n    }\n  }\n\n\n': {
     return: ProductQuery;
     variables: ProductQueryVariables;
   };

@@ -4,7 +4,37 @@ import duo from "../assets/duo.png";
 import squad from "../assets/squad.png";
 import nutri from "../assets/nutri.svg";
 import { Link } from "@remix-run/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Money } from "@shopify/hydrogen";
+import type { CurrencyCode } from "@shopify/hydrogen/storefront-api-types";
+import { AddToCartButton } from "./AddToCartButton";
+import { useAside } from "~/components/Aside";
+
+// Define a type for our product data
+type ProductVariant = {
+    id: string;
+    price: {
+        amount: string;
+        currencyCode: CurrencyCode;
+    };
+    compareAtPrice?: {
+        amount: string;
+        currencyCode: CurrencyCode;
+    } | null;
+};
+
+type ProductData = {
+    id: string;
+    title: string;
+    handle: string;
+    variants: {
+        nodes: ProductVariant[];
+    };
+};
+
+type ApiResponse = {
+    product: ProductData;
+};
 
 export default function ProductOverview() {
     // Gallery images array
@@ -15,11 +45,38 @@ export default function ProductOverview() {
         { src: nutri, alt: "Bevvy Ingredients" },
     ];
     const [current, setCurrent] = useState(0);
+    const [product, setProduct] = useState<ProductData | null>(null);
+    const [loading, setLoading] = useState(true);
+    const { open } = useAside();
+
+    // Fetch product data
+    useEffect(() => {
+        async function fetchProduct() {
+            try {
+                // Make sure we're using the same URL format and params as the main store
+                const response = await fetch("/api/products/bevvy");
+                if (response.ok) {
+                    const data = await response.json() as ApiResponse;
+                    setProduct(data.product);
+                }
+            } catch (error) {
+                console.error("Error fetching product:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchProduct();
+    }, []);
 
     const prevPhoto = () =>
         setCurrent((prev) => (prev === 0 ? photos.length - 1 : prev - 1));
     const nextPhoto = () =>
         setCurrent((prev) => (prev === photos.length - 1 ? 0 : prev + 1));
+
+    // Get the price data from the first variant to match main product page
+    const price = product?.variants?.nodes?.[0]?.price;
+    console.log(price);
 
     return (
         <div className="bg-neutral-800 mt-16 m-12 shadow-2xl rounded-3xl text-white min-h-screen pt-12 sm:pt-16 font-sewimple tracking-wide">
@@ -86,7 +143,22 @@ export default function ProductOverview() {
                             Bevvy (6 x 300ml)
                         </h1>
                         <p className="mt-2 text-3xl tracking-tight text-white/90">
-                            $30
+                            {loading || !price
+                                ? (
+                                    // Display placeholder only during loading
+                                    <span className="opacity-50">
+                                        Loading price...
+                                    </span>
+                                )
+                                : (
+                                    // Money component using the same format as main product page
+                                    <Money
+                                        data={price}
+                                        withoutTrailingZeros={true}
+                                        withoutCurrency={false}
+                                        className="text-white"
+                                    />
+                                )}
                         </p>
 
                         {/* Product details */}
@@ -130,13 +202,30 @@ export default function ProductOverview() {
                             </div>
                         </div>
                         <div className="h-full w-full flex items-end gap-6 text-white">
-                            <Link
-                                to="/products/bevvy"
-                                className="group w-fit bg-[#FF0000] px-10 pt-4 pb-2 rounded-full font-bevvy text-[24px] relative z-50 transition-all duration-300 hover:cursor-pointer"
+                            <AddToCartButton
+                                lines={[{
+                                    quantity: 1,
+                                    merchandiseId: product?.variants?.nodes?.[0]
+                                        ?.id as string,
+                                }]}
+                                onClick={() => {
+                                    if (product?.variants?.nodes?.[0]?.id) {
+                                        open("cart");
+                                    }
+                                }}
                             >
-                                <span className="font-bevvy transition-all duration-300 text-white">
-                                    Add to Cart
-                                </span>
+                                <div className="group !w-fit bg-[#FF0000] px-10 pt-4 pb-2 rounded-full font-bevvy text-[24px] relative z-50 transition-all duration-300 hover:cursor-pointer">
+                                    <span className="font-bevvy transition-all duration-300 text-white whitespace-nowrap">
+                                        Add to Cart
+                                    </span>
+                                </div>
+                            </AddToCartButton>
+                            <Link to="products/bevvy">
+                                <div className="group w-fit bg-[#000] px-10 pt-4 pb-2 rounded-full font-bevvy text-[24px] relative z-50 transition-all duration-300 hover:cursor-pointer">
+                                    <span className="font-bevvy transition-all duration-300 !text-white whitespace-nowrap">
+                                        Subscribe
+                                    </span>
+                                </div>
                             </Link>
                         </div>
                     </div>

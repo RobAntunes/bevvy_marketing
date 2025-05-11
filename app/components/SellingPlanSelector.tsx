@@ -29,11 +29,11 @@ export function SellingPlanSelector({
   paramKey = 'selling_plan',
 }: {
   sellingPlanGroups: ProductFragment['sellingPlanGroups'];
-  selectedSellingPlan: SellingPlanFragment | null;
+  selectedSellingPlan: any | null;
   paramKey?: string;
   children: (params: {
     sellingPlanGroup: SellingPlanGroup;
-    selectedSellingPlan: SellingPlanFragment | null;
+    selectedSellingPlan: any | null;
   }) => React.ReactNode;
 }) {
   const {search, pathname} = useLocation();

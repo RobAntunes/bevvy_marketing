@@ -76,7 +76,7 @@ async function loadCriticalData({
       if (!group?.sellingPlans?.nodes) continue;
       
       const foundPlan = group.sellingPlans.nodes.find(
-        (plan: SellingPlanFragment) => plan?.id === sellingPlanId
+        (plan) => plan?.id === sellingPlanId
       );
       
       if (foundPlan) {
@@ -142,7 +142,7 @@ export default function Product() {
 
   return (
     <div className="bg-white min-h-screen flex flex-col justify-center mt-12 font-sewimple tracking-wide">
-      <div className="max-w-6xl mx-auto px-4 py-12">
+      <div className="max-w-6xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Product Image Gallery */}
           <div className="flex flex-col space-y-4">
@@ -192,13 +192,13 @@ export default function Product() {
               <h1 className="!text-[96px] font-bevvy text-neutral-900 ">
                 {title}
               </h1>
-              <div className="text-2xl text-gray-700 mb-2 font-sewimple">
+              <div className="text-2xl text-gray-700 font-sewimple">
                 Drink to enhance your mood and energy
               </div>
             </div>
 
             {/* Product Form */}
-            <div className="py-6 border-b border-gray-100">
+            <div className="pt-2 border-b border-gray-100">
               <ProductForm
                 productOptions={productOptions}
                 selectedVariant={selectedVariant}
@@ -390,4 +390,42 @@ const PRODUCT_QUERY = `#graphql
     }
   }
   ${PRODUCT_FRAGMENT}
+` as const;
+
+// Helper resource route for overview component
+export async function fetchProductOverview(storefront: any, handle = 'bevvy') {
+  try {
+    const { product } = await storefront.query(PRODUCT_BASIC_INFO, {
+      variables: { handle },
+    });
+
+    return product;
+  } catch (error) {
+    console.error('Error fetching product overview:', error);
+    return null;
+  }
+}
+
+const PRODUCT_BASIC_INFO = `#graphql
+  query ProductBasicInfo($handle: String!) {
+    product(handle: $handle) {
+      id
+      title
+      handle
+      description
+      variants(first: 1) {
+        nodes {
+          id
+          price {
+            amount
+            currencyCode
+          }
+          compareAtPrice {
+            amount
+            currencyCode
+          }
+        }
+      }
+    }
+  }
 ` as const;
