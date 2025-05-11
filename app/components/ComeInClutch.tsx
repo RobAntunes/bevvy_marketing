@@ -99,40 +99,38 @@ const scenarioCards = [
 
 const ComeInClutchSection = () => {
     return (
-        <div className="container px-4 flex flex-col items-center bg-neutral-900 py-16 pt-12">
-            {/* Section Header */}
-            <div className="text-center mb-10 flex flex-col items-center">
-                <h2 className="text-6xl md:text-8xl font-black mb-4 !text-[124px]">
-                    <span className="text-white">COME IN</span>
+        <div className="container px-4 flex flex-col items-center bg-neutral-900 py-12 md:py-16">
+            {/* Section Header - Make header text responsive */}
+            <div className="mb-10 md:mb-12 lg:mb-16 flex flex-col items-center">
+                <h2 className="!p-6 !text-6xl md:!text-7xl lg:!text-8xl font-black mb-4">
+                    <span className="text-white">COME IN </span>
                     <span className="text-red-600">CLUTCH</span>
-                </h2>
-                <p className="!text-2xl md:text-xl max-w-2xl mx-auto text-center text-gray-400">
+                </h2>   
+                <p className="!text-lg sm:!text-xl md:!text-2xl max-w-xl md:max-w-2xl mx-auto lg:!text-center !text-left text-gray-400 mb-2">
                     With Bevvy, there is no line between fun and performance.
                 </p>
-                <p className="!text-2xl md:text-xl max-w-2xl mx-auto text-center text-[#FF8181]">
+                <p className="!text-lg sm:!text-xl md:!text-2xl max-w-xl md:!max-w-2xl mx-auto lg:!text-center !text-left text-[#FF8181]">
                     Go from zero to hero when it matters most.
                 </p>
             </div>
 
-            {/* Horizontally scrollable scenario panels */}
-            <div className="w-full pb-4 h-full flex justify-center items-center">
-                <div className="flex flex-row w-fit h-full">
-                    {scenarioCards.map((card, index) => (
-                        <ScenarioPanel
-                            key={card.id}
-                            icon={card.icon}
-                            badge={card.badge as string}
-                            title={card.title}
-                            description={card.description}
-                            highlightText={card.highlightText}
-                            stat={card.stat}
-                            ctaText={card.ctaText}
-                            image={card.image}
-                            onClick={() =>
-                                console.log(`Panel ${card.id} clicked`)}
-                        />
-                    ))}
-                </div>
+            {/* Responsive grid for scenario panels */}
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 pb-4">
+                {scenarioCards.map((card, index) => (
+                    <ScenarioPanel
+                        key={card.id}
+                        icon={card.icon}
+                        badge={card.badge as string}
+                        title={card.title}
+                        description={card.description}
+                        highlightText={card.highlightText}
+                        stat={card.stat}
+                        ctaText={card.ctaText}
+                        image={card.image}
+                        onClick={() =>
+                            console.log(`Panel ${card.id} clicked`)}
+                    />
+                ))}
             </div>
         </div>
     );

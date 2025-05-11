@@ -30,7 +30,7 @@ export function CartMain({ layout, cart: originalCart }: CartMainProps) {
     <div
       className={`cart-main ${
         withDiscount ? "with-discount" : ""
-      } bg-white rounded-lg p-6 font-sewimple relative z-[50]`}
+      } bg-white rounded-lg p-6 font-sewimple relative !z-[9999] !h-full flex-grow-1`}
     >
       <h2 className="text-3xl font-sewimple text-neutral-900 mb-6 tracking-wide">
         Your Cart

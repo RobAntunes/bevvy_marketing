@@ -249,8 +249,8 @@ button.reset:hover:not(:has(> *)) {
 * --------------------------------------------------
 */
 .cart-main {
+  padding-top: 75px;
   height: 100%;
-  max-height: calc(100vh - var(--cart-aside-summary-height));
   overflow-y: auto;
   width: auto;
 }
