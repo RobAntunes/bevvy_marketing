@@ -201,7 +201,7 @@ export default function ProductOverview() {
                                 </ul>
                             </div>
                         </div>
-                        <div className="h-full w-full flex items-end gap-6 text-white">
+                        <div className="h-full w-full flex items-end gap-6 text-white relative z-0">
                             <AddToCartButton
                                 lines={[{
                                     quantity: 1,

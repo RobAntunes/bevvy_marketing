@@ -1,35 +1,31 @@
-import { json, LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import { json, type LoaderFunctionArgs } from "@shopify/remix-oxygen";
 
-export async function loader({ params, context, request }: LoaderFunctionArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const { handle } = params;
   const { storefront } = context;
-
-  // Get user's preferred currency from query param or cookie
-  const url = new URL(request.url);
-  const currencyParam = url.searchParams.get("currency");
-
-  // Get user locale from browser
-  const acceptLanguage = request.headers.get("accept-language") || "en-US";
-  const locale = acceptLanguage.split(",")[0].split("-")[0] || "en";
 
   if (!handle) {
     return json({ error: "Product handle is required" }, { status: 400 });
   }
 
-  // Use the same localization context as the rest of the store
-  const { product } = await storefront.query(PRODUCT_PRICE_QUERY, {
-    variables: { handle },
-  });
+  try {
+    const { product } = await storefront.query(PRODUCT_PRICE_QUERY, {
+      variables: { handle },
+    });
 
-  if (!product) {
-    return json({ error: "Product not found" }, { status: 404 });
+    if (!product) {
+      return json({ error: "Product not found" }, { status: 404 });
+    }
+
+    return json({ product });
+  } catch (error) {
+    console.error('Error fetching product in API route:', error);
+    return json({ error: "Failed to fetch product data" }, { status: 500 });
   }
-
-  return json({ product });
 }
 
 const PRODUCT_PRICE_QUERY = `#graphql
-  query ProductPrice($handle: String!) {
+  query ProductPriceForOverview($handle: String!) {
     product(handle: $handle) {
       id
       title
@@ -49,17 +45,4 @@ const PRODUCT_PRICE_QUERY = `#graphql
       }
     }
   }
-` as const;
-
-const SHOP_CURRENCY_QUERY = `#graphql
-  query ShopCurrencies {
-    shop {
-      name
-      paymentSettings {
-        currencyCode
-        acceptedCardBrands
-        supportedDigitalWallets
-      }
-    }
-  }
-` as const;
+` as const; 
