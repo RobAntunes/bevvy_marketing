@@ -22,6 +22,30 @@ export const CART_QUERY_FRAGMENT = `#graphql
         ...Money
       }
     }
+    sellingPlanAllocation {
+      sellingPlan {
+        id
+        name
+        description
+        options {
+          name
+          value
+        }
+        priceAdjustments {
+          orderCount
+          adjustmentValue {
+            ... on SellingPlanFixedAmountPriceAdjustment {
+              adjustmentAmount {
+                ...Money
+              }
+            }
+            ... on SellingPlanPercentagePriceAdjustment {
+              adjustmentPercentage
+            }
+          }
+        }
+      }
+    }
     merchandise {
       ... on ProductVariant {
         id
@@ -71,6 +95,13 @@ export const CART_QUERY_FRAGMENT = `#graphql
       }
       compareAtAmountPerQuantity {
         ...Money
+      }
+    }
+    sellingPlanAllocation {
+      sellingPlan {
+        id
+        name
+        description
       }
     }
     merchandise {

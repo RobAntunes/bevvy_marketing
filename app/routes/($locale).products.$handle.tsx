@@ -13,6 +13,7 @@ import { ProductImage } from "~/components/ProductImage";
 import { ProductForm } from "~/components/ProductForm";
 import { redirectIfHandleIsLocalized } from "~/lib/redirect";
 import { useState } from "react";
+import type { SellingPlanFragment, ProductWithSellingPlans } from "~/types/subscription";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -50,6 +51,10 @@ async function loadCriticalData({
     throw new Error("Expected product handle to be defined");
   }
 
+  // Get the selling plan ID from URL params if it exists
+  const url = new URL(request.url);
+  const sellingPlanId = url.searchParams.get('selling_plan');
+
   const [{ product }] = await Promise.all([
     storefront.query(PRODUCT_QUERY, {
       variables: {
@@ -64,11 +69,29 @@ async function loadCriticalData({
     throw new Response(null, { status: 404 });
   }
 
+  // Find the selected selling plan if ID is provided
+  let selectedSellingPlan = null;
+  if (sellingPlanId && product.sellingPlanGroups?.nodes) {
+    for (const group of product.sellingPlanGroups.nodes) {
+      if (!group?.sellingPlans?.nodes) continue;
+      
+      const foundPlan = group.sellingPlans.nodes.find(
+        (plan: SellingPlanFragment) => plan?.id === sellingPlanId
+      );
+      
+      if (foundPlan) {
+        selectedSellingPlan = foundPlan;
+        break;
+      }
+    }
+  }
+
   // The API handle might be localized, so redirect to the localized handle
   redirectIfHandleIsLocalized(request, { handle, data: product });
 
   return {
     product,
+    selectedSellingPlan,
   };
 }
 
@@ -85,7 +108,8 @@ function loadDeferredData({ context, params }: LoaderFunctionArgs) {
 }
 
 export default function Product() {
-  const { product } = useLoaderData<typeof loader>();
+  const { product, selectedSellingPlan } = useLoaderData<typeof loader>();
+  const productWithSellingPlans = product as unknown as ProductWithSellingPlans;
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -165,8 +189,8 @@ export default function Product() {
           <div className="flex flex-col">
             {/* Title and Price */}
             <div className="border-b border-gray-100 pb-6">
-              <h1 className="!text-[96px] font-bevvy text-neutral-900 mb-2">
-                {title} - {selectedVariant?.title}
+              <h1 className="!text-[96px] font-bevvy text-neutral-900 ">
+                {title}
               </h1>
               <div className="text-2xl text-gray-700 mb-2 font-sewimple">
                 Drink to enhance your mood and energy
@@ -178,6 +202,8 @@ export default function Product() {
               <ProductForm
                 productOptions={productOptions}
                 selectedVariant={selectedVariant}
+                sellingPlanGroups={productWithSellingPlans.sellingPlanGroups}
+                selectedSellingPlan={selectedSellingPlan}
               />
             </div>
 
@@ -313,6 +339,40 @@ const PRODUCT_FRAGMENT = `#graphql
     seo {
       description
       title
+    }
+    sellingPlanGroups(first: 5) {
+      nodes {
+        name
+        options {
+          name
+          values
+        }
+        sellingPlans(first: 5) {
+          nodes {
+            id
+            name
+            description
+            options {
+              name
+              value
+            }
+            priceAdjustments {
+              orderCount
+              adjustmentValue {
+                ... on SellingPlanFixedAmountPriceAdjustment {
+                  adjustmentAmount {
+                    amount
+                    currencyCode
+                  }
+                }
+                ... on SellingPlanPercentagePriceAdjustment {
+                  adjustmentPercentage
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
   ${PRODUCT_VARIANT_FRAGMENT}

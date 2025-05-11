@@ -81,6 +81,28 @@ const FIRST_PRODUCT_ITEM_FRAGMENT = `#graphql
     amount
     currencyCode
   }
+  fragment SellingPlanFragment on SellingPlan {
+    id
+    name
+    description
+    options {
+      name
+      value
+    }
+    priceAdjustments {
+      orderCount
+      adjustmentValue {
+        ... on SellingPlanFixedAmountPriceAdjustment {
+          adjustmentAmount {
+            ...MoneyCollectionItem
+          }
+        }
+        ... on SellingPlanPercentagePriceAdjustment {
+          adjustmentPercentage
+        }
+      }
+    }
+  }
   query Products($first: Int, $last: Int, $startCursor: String, $endCursor: String) {
     products(
       first: $first,
@@ -116,6 +138,20 @@ const FIRST_PRODUCT_ITEM_FRAGMENT = `#graphql
         }
         metafield(namespace: "custom", key: "info") {
           value
+        }
+        sellingPlanGroups(first: 5) {
+          nodes {
+            name
+            options {
+              name
+              values
+            }
+            sellingPlans(first: 5) {
+              nodes {
+                ...SellingPlanFragment
+              }
+            }
+          }
         }
       }
       pageInfo {

@@ -7,7 +7,16 @@ import {ProductPrice} from './ProductPrice';
 import {useAside} from './Aside';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 
-type CartLine = OptimisticCartLine<CartApiQueryFragment>;
+// Extended CartLine type that includes sellingPlanAllocation
+type CartLine = OptimisticCartLine<CartApiQueryFragment> & {
+  sellingPlanAllocation?: {
+    sellingPlan: {
+      id: string;
+      name: string;
+      description?: string;
+    };
+  };
+};
 
 /**
  * A single line item in the cart. It displays the product image, title, price.
@@ -24,6 +33,9 @@ export function CartLineItem({
   const {product, title, image, selectedOptions} = merchandise;
   const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
   const {close} = useAside();
+  
+  // Safe access to sellingPlanAllocation
+  const sellingPlanAllocation = line.sellingPlanAllocation;
 
   return (
     <li key={id} className="cart-line pt-6 pb-2">
@@ -90,6 +102,15 @@ export function CartLineItem({
                     </li>
                   ))}
                 </ul>
+              )}
+              
+              {/* Subscription details */}
+              {sellingPlanAllocation && (
+                <div className="mt-2">
+                  <span className="inline-block px-2 py-1 bg-red-100 text-red-700 text-xs font-medium rounded">
+                    {sellingPlanAllocation.sellingPlan.name}
+                  </span>
+                </div>
               )}
             </div>
             

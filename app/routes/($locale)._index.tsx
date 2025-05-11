@@ -50,7 +50,7 @@ export default function Homepage() {
                 experience, and we&apos;re proud to pioneer it.
               </p>
               <Link
-                to="/products"
+                to="/products/bevvy"
                 className="group w-fit bg-black hover:bg-white  px-10 py-4 rounded-full font-bevvy text-[24px] relative z-50 transition-all duration-300 hover:cursor-pointer"
               >
                 <span className="transition-all duration-300 group-hover:text-black text-white">
