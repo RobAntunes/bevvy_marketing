@@ -31,7 +31,9 @@ export function CartSummary({ cart, layout }: CartSummaryProps) {
 
         {cart.cost?.totalAmount && (
           <dl className="flex justify-between items-center pt-3 sm:pt-4 border-t border-gray-200">
-            <dt className="text-base sm:text-lg font-semibold text-neutral-900">Total</dt>
+            <dt className="text-base sm:text-lg font-semibold text-neutral-900">
+              Total
+            </dt>
             <dd className="text-base sm:text-lg font-bold text-red-600">
               <Money data={cart.cost.totalAmount} />
             </dd>
@@ -53,13 +55,9 @@ function CartCheckoutActions({ checkoutUrl }: { checkoutUrl?: string }) {
         target="_self"
         className="flex items-center justify-center w-full bg-[#FF0000] text-white text-center px-4 py-3 sm:px-6 rounded-full font-bevvy text-lg sm:text-xl md:text-2xl hover:bg-[#FF8181] hover:text-[#FF0000] transition-all duration-300"
       >
-        <span className="font-bevvy whitespace-nowrap !text-white">Checkout</span>
-      </a>
-      <a 
-        href="/products/bevvy"
-        className="flex items-center justify-center w-full bg-black text-white text-center px-4 py-3 sm:px-6 rounded-full font-bevvy text-lg sm:text-xl md:text-2xl hover:bg-neutral-700 transition-all duration-300"
-      >
-        <span className="font-bevvy whitespace-nowrap">Get Bevvy</span>
+        <span className="font-bevvy whitespace-nowrap !text-white">
+          Checkout
+        </span>
       </a>
 
       <p className="text-center text-xs sm:text-sm text-neutral-500 mt-2 sm:mt-4">
@@ -80,7 +78,10 @@ function CartDiscounts({
 
   return (
     <div className="space-y-2 sm:space-y-3 relative !z-[9999]">
-      <dl hidden={!codes.length} className="flex justify-between items-center text-sm sm:text-base">
+      <dl
+        hidden={!codes.length}
+        className="flex justify-between items-center text-sm sm:text-base"
+      >
         <dt className="text-neutral-600">Discount</dt>
         <dd className="flex items-center">
           <UpdateDiscountForm>
@@ -169,7 +170,10 @@ function CartGiftCard({
 
   return (
     <div className="space-y-2 sm:space-y-3">
-      <dl hidden={!codes.length} className="flex justify-between items-center text-sm sm:text-base">
+      <dl
+        hidden={!codes.length}
+        className="flex justify-between items-center text-sm sm:text-base"
+      >
         <dt className="text-neutral-600">Gift Card</dt>
         <dd className="flex items-center">
           <UpdateGiftCardForm>
@@ -177,9 +181,7 @@ function CartGiftCard({
               <code className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs sm:text-sm">
                 {codes?.join(", ")}
               </code>
-              <button
-                className="ml-2 text-xs sm:text-sm text-red-600 hover:text-red-800"
-              >
+              <button className="ml-2 text-xs sm:text-sm text-red-600 hover:text-red-800">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
@@ -195,7 +197,10 @@ function CartGiftCard({
       </dl>
 
       <div hidden={codes.length > 0}>
-        <UpdateGiftCardForm giftCardCodes={appliedGiftCardCodes.current} saveAppliedCode={saveAppliedCode} >
+        <UpdateGiftCardForm
+          giftCardCodes={appliedGiftCardCodes.current}
+          saveAppliedCode={saveAppliedCode}
+        >
           <div className="mt-2 flex flex-col sm:flex-row items-stretch sm:items-baseline gap-2 sm:gap-0">
             <input
               type="text"
